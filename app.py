@@ -51,7 +51,7 @@ if not st.session_state.logged_in:
     st.stop()
 
 # ==================================
-# FIXED TOP & BOTTOM BAR CSS (EQUAL ALIGNMENT + CENTERED NAV)
+# FIXED TOP & BOTTOM BAR CSS
 # ==================================
 
 st.markdown("""<style>
@@ -59,30 +59,33 @@ header[data-testid="stHeader"] {
     display: none !important;
 }
 
-/* Hide Streamlit Cloud floating viewer badge so Users tab is never covered */
+/* Hide Streamlit Cloud floating viewer badge */
 [data-testid="stDecoration"],
 [data-testid="stStatusWidget"],
-.viewerBadge_container__r5tak,
-.styles_viewerBadge__CvC9N {
+[class*="viewerBadge"],
+[class*="StatusWidget"] {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
 .block-container,
 [data-testid="stMainBlockContainer"] {
-    padding-top: 94px !important;
-    padding-bottom: 94px !important;
+    padding-top: 98px !important;
+    padding-bottom: 96px !important;
 }
 
-/* 1. FIXED TOP HEADER BAR (EQUAL VERTICAL CENTER ALIGNMENT) */
+/* 1. FIXED TOP HEADER BAR (STRICT SINGLE-LINE CENTER ALIGNMENT + BREATHING MARGIN) */
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     width: 100vw !important;
-    height: 74px !important;
-    min-height: 74px !important;
-    max-height: 74px !important;
+    height: 78px !important;
+    min-height: 78px !important;
+    max-height: 78px !important;
     background: linear-gradient(90deg, #061b4e 0%, #082567 100%) !important;
     color: white !important;
     display: flex !important;
@@ -90,22 +93,26 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) {
     flex-wrap: nowrap !important;
     justify-content: space-between !important;
     align-items: center !important;
-    padding: 0 20px !important;
+    padding: 10px 22px !important;
     margin: 0 !important;
     gap: 10px !important;
-    z-index: 99999 !important;
+    z-index: 2147483647 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22) !important;
+    box-sizing: border-box !important;
 }
 
-/* Force every inner column & wrapper inside top bar to center vertically */
+/* Strip all default Streamlit margins/heights from inner column wrappers */
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stColumn"],
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) [data-testid="stVerticalBlock"],
-div[data-testid="stHorizontalBlock"]:has(.top-title-box) [data-testid="stElementContainer"] {
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) [data-testid="stElementContainer"],
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) [data-testid="stMarkdownContainer"],
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) .stButton {
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
     align-items: stretch !important;
     height: 100% !important;
+    min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     gap: 0 !important;
@@ -129,6 +136,7 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stCo
     flex-direction: column !important;
     justify-content: center !important;
     background: transparent !important;
+    padding: 2px 0 !important;
     overflow: hidden !important;
 }
 .top-title-box h2 {
@@ -137,34 +145,39 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stCo
     font-size: 21px !important;
     font-weight: 700 !important;
     color: #ffffff !important;
-    line-height: 1.2 !important;
+    line-height: 1.25 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
 }
 .top-title-box span {
     display: block !important;
-    margin: 2px 0 0 0 !important;
+    margin: 3px 0 0 0 !important;
+    padding: 0 !important;
     font-size: 13px !important;
     color: rgba(255, 255, 255, 0.88) !important;
-    line-height: 1.15 !important;
+    line-height: 1.2 !important;
     background: transparent !important;
     white-space: nowrap !important;
 }
 
 .top-user-wrap {
     display: flex !important;
-    justify-content: flex-end !important;
+    justify-content: center !important;
     align-items: center !important;
     height: 100% !important;
     background: transparent !important;
 }
+
+/* Identical Height (38px) and Centering for User Pill & Logout Button */
 .user-badge {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     background: rgba(255, 255, 255, 0.16) !important;
     height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
     padding: 0 14px !important;
     border-radius: 19px !important;
     font-size: 15px !important;
@@ -172,9 +185,9 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stCo
     color: #ffffff !important;
     white-space: nowrap !important;
     line-height: 1 !important;
+    box-sizing: border-box !important;
 }
 
-/* Red Logout Button Centered Inside Top Header Bar */
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) button {
     display: inline-flex !important;
     align-items: center !important;
@@ -184,20 +197,28 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) button {
     border-radius: 19px !important;
     height: 38px !important;
     min-height: 38px !important;
+    max-height: 38px !important;
     padding: 0 14px !important;
     font-size: 15px !important;
     font-weight: 600 !important;
     border: none !important;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
     margin: 0 !important;
+    line-height: 1 !important;
     white-space: nowrap !important;
+    box-sizing: border-box !important;
+}
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) button p {
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
 }
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) button:hover {
     background: #C62828 !important;
     color: #ffffff !important;
 }
 
-/* 2. FIXED BOTTOM NAVIGATION BAR (CENTERED TEXT INSIDE EVERY BUTTON) */
+/* 2. FIXED BOTTOM NAVIGATION BAR (ALL 6 BUTTONS EVENLY FITTED & CENTERED) */
 div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) {
     position: fixed !important;
     bottom: 0 !important;
@@ -208,13 +229,14 @@ div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) {
     border-top: 1px solid #cbd5e1 !important;
     padding: 8px 14px !important;
     margin: 0 !important;
-    z-index: 99999 !important;
+    z-index: 2147483647 !important;
     box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.12) !important;
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     align-items: center !important;
     gap: 8px !important;
+    box-sizing: border-box !important;
 }
 
 div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) > div[data-testid="stColumn"] {
@@ -276,41 +298,46 @@ div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button[kind="pr
 @media (max-width: 768px) {
     .block-container,
     [data-testid="stMainBlockContainer"] {
-        padding-top: 72px !important;
+        padding-top: 80px !important;
         padding-bottom: 84px !important;
     }
     div[data-testid="stHorizontalBlock"]:has(.top-title-box) {
-        height: 58px !important;
-        min-height: 58px !important;
-        max-height: 58px !important;
-        padding: 0 10px !important;
+        height: 64px !important;
+        min-height: 64px !important;
+        max-height: 64px !important;
+        padding: 8px 12px !important;
         gap: 6px !important;
     }
     .top-title-box h2 {
         font-size: 14px !important;
+        line-height: 1.2 !important;
         margin: 0 !important;
     }
     .top-title-box span {
         font-size: 11px !important;
-        margin-top: 1px !important;
+        line-height: 1.2 !important;
+        margin-top: 3px !important;
     }
     .user-badge {
-        height: 30px !important;
-        padding: 0 9px !important;
+        height: 32px !important;
+        min-height: 32px !important;
+        max-height: 32px !important;
+        padding: 0 10px !important;
         font-size: 12px !important;
     }
     div[data-testid="stHorizontalBlock"]:has(.top-title-box) button {
-        height: 30px !important;
-        min-height: 30px !important;
-        padding: 0 9px !important;
+        height: 32px !important;
+        min-height: 32px !important;
+        max-height: 32px !important;
+        padding: 0 10px !important;
         font-size: 12px !important;
     }
     div[data-testid="stHorizontalBlock"]:has(.top-title-box) button p {
         font-size: 12px !important;
     }
     div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) {
-        padding: 6px 4px !important;
-        gap: 3px !important;
+        padding: 6px 6px !important;
+        gap: 4px !important;
     }
     div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button {
         height: 48px !important;
