@@ -2,12 +2,11 @@ import streamlit as st
 
 from modules.auth import login_page
 from modules.styles import load_styles
-
+from pages.alerts import show_alerts
+from pages.analytics import show_analytics
+from pages.crew import show_crew
 from pages.home import show_home
 from pages.loads import show_loads
-from pages.crew import show_crew
-from pages.analytics import show_analytics
-from pages.alerts import show_alerts
 from pages.users import show_users
 
 # ==================================
@@ -52,7 +51,7 @@ if not st.session_state.logged_in:
     st.stop()
 
 # ==================================
-# FIXED TOP & BOTTOM BAR CSS
+# FIXED TOP & BOTTOM BAR CSS (DESKTOP + MOBILE)
 # ==================================
 
 st.markdown("""<style>
@@ -61,55 +60,86 @@ header[data-testid="stHeader"] {
 }
 .block-container,
 [data-testid="stMainBlockContainer"] {
-    padding-top: 108px !important;
-    padding-bottom: 130px !important;
+    padding-top: 98px !important;
+    padding-bottom: 96px !important;
 }
 
-/* 1. FIXED TOP HEADER BAR */
+/* 1. FIXED TOP HEADER BAR (ALWAYS SINGLE ROW) */
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     width: 100vw !important;
-    min-height: 88px !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    max-height: 76px !important;
     background: linear-gradient(90deg, #061b4e 0%, #082567 100%) !important;
     color: white !important;
     display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
     align-items: center !important;
-    padding: 14px 24px 16px 24px !important;
+    padding: 8px 20px !important;
     margin: 0 !important;
+    gap: 8px !important;
     z-index: 99999 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22) !important;
 }
 
+/* Prevent Streamlit column wrappers from stacking vertically on mobile */
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stColumn"] {
+    width: auto !important;
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
+}
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stColumn"]:first-child {
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+}
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stColumn"]:nth-child(2),
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stColumn"]:nth-child(3) {
+    flex: 0 0 auto !important;
+}
+
+.top-title-box {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    background: transparent !important;
+    overflow: hidden !important;
+}
 .top-title-box h2 {
-    margin: 0 0 4px 0 !important;
-    font-size: 25px !important;
+    margin: 0 0 2px 0 !important;
+    font-size: 22px !important;
     font-weight: 700 !important;
     color: #ffffff !important;
     line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 .top-title-box span {
     display: block !important;
-    font-size: 16px !important;
-    color: rgba(255, 255, 255, 0.90) !important;
+    font-size: 14px !important;
+    color: rgba(255, 255, 255, 0.88) !important;
     line-height: 1.2 !important;
     background: transparent !important;
+    white-space: nowrap !important;
 }
 
 .top-user-wrap {
     display: flex !important;
     justify-content: flex-end !important;
     align-items: center !important;
-    height: 46px !important;
     background: transparent !important;
 }
 .user-badge {
     background: rgba(255, 255, 255, 0.16) !important;
-    padding: 8px 18px !important;
-    border-radius: 20px !important;
-    font-size: 17px !important;
+    padding: 6px 14px !important;
+    border-radius: 18px !important;
+    font-size: 15px !important;
     font-weight: 600 !important;
     color: #ffffff !important;
     white-space: nowrap !important;
@@ -119,21 +149,23 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) {
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) button {
     background: #E53935 !important;
     color: #ffffff !important;
-    border-radius: 20px !important;
-    height: 44px !important;
-    min-height: 44px !important;
-    font-size: 17px !important;
+    border-radius: 18px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 14px !important;
+    font-size: 15px !important;
     font-weight: 600 !important;
     border: none !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
     margin: 0 !important;
+    white-space: nowrap !important;
 }
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) button:hover {
     background: #C62828 !important;
     color: #ffffff !important;
 }
 
-/* 2. FIXED BOTTOM NAVIGATION BAR */
+/* 2. FIXED BOTTOM NAVIGATION BAR (ALWAYS SINGLE ROW) */
 div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) {
     position: fixed !important;
     bottom: 0 !important;
@@ -142,23 +174,42 @@ div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) {
     width: 100vw !important;
     background: #ffffff !important;
     border-top: 1px solid #cbd5e1 !important;
-    padding: 10px 18px !important;
+    padding: 8px 14px !important;
     margin: 0 !important;
     z-index: 99999 !important;
     box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.12) !important;
-    gap: 10px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) > div[data-testid="stColumn"] {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
 }
 
 div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button {
-    height: 52px !important;
-    min-height: 52px !important;
-    border-radius: 14px !important;
-    font-size: 18px !important;
+    width: 100% !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
     font-weight: 600 !important;
     background: #f1f5f9 !important;
     color: #1e293b !important;
     border: 1px solid #cbd5e1 !important;
+    padding: 0 6px !important;
     transition: all 0.2s ease !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button p {
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin: 0 !important;
 }
 
 div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button:hover {
@@ -173,27 +224,54 @@ div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button[kind="pr
     box-shadow: 0 3px 10px rgba(8, 37, 103, 0.28) !important;
 }
 
+/* MOBILE COMPACT ADJUSTMENTS (<= 768px) */
 @media (max-width: 768px) {
     .block-container,
     [data-testid="stMainBlockContainer"] {
-        padding-top: 98px !important;
-        padding-bottom: 120px !important;
+        padding-top: 74px !important;
+        padding-bottom: 84px !important;
     }
     div[data-testid="stHorizontalBlock"]:has(.top-title-box) {
-        padding: 10px 12px 12px 12px !important;
-        min-height: 78px !important;
-    }
-    .top-title-box h2 { font-size: 19px !important; }
-    .top-title-box span { font-size: 14px !important; }
-    div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) {
-        padding: 8px 6px !important;
+        height: 60px !important;
+        min-height: 60px !important;
+        max-height: 60px !important;
+        padding: 6px 10px !important;
         gap: 6px !important;
     }
+    .top-title-box h2 {
+        font-size: 14px !important;
+        margin: 0 0 1px 0 !important;
+    }
+    .top-title-box span {
+        font-size: 11px !important;
+    }
+    .user-badge {
+        padding: 4px 8px !important;
+        font-size: 12px !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.top-title-box) button {
+        height: 32px !important;
+        min-height: 32px !important;
+        padding: 0 10px !important;
+        font-size: 12px !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.top-title-box) button p {
+        font-size: 12px !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) {
+        padding: 6px 4px !important;
+        gap: 4px !important;
+    }
     div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button {
-        font-size: 15px !important;
         height: 46px !important;
         min-height: 46px !important;
-        padding: 0 4px !important;
+        padding: 0 2px !important;
+        border-radius: 10px !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button p {
+        font-size: 11px !important;
+        line-height: 1.15 !important;
+        white-space: normal !important;
     }
 }
 </style>""", unsafe_allow_html=True)
@@ -205,7 +283,7 @@ div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button[kind="pr
 t_col1, t_col2, t_col3 = st.columns([7.8, 1.1, 1.1])
 
 with t_col1:
-    st.markdown("""<div class="top-title-box" style="background:transparent;">
+    st.markdown("""<div class="top-title-box">
 <h2>🚆 Crew Arrangement &amp; Mobility</h2>
 <span>DRM Control Dashboard</span>
 </div>""", unsafe_allow_html=True)
@@ -246,7 +324,7 @@ elif page == "users":
 # BOTTOM SPACER + FIXED NAVIGATION
 # ==================================
 
-st.markdown('<div style="height: 36px; background: transparent;"></div>', unsafe_allow_html=True)
+st.markdown('<div style="height: 24px; background: transparent;"></div>', unsafe_allow_html=True)
 
 nav_items = [
     ("home", "🏠 Home"),
