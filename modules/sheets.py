@@ -1,9 +1,9 @@
-import streamlit as st
+import os
+
 import gspread
 import pandas as pd
-
+import streamlit as st
 from google.oauth2.service_account import Credentials
-
 
 SPREADSHEET_ID = "1D_4S15j3nxHyrjdPeeTqVglVRGSvJxtZYdTY3xaTNj4"
 
@@ -15,10 +15,22 @@ def get_client():
         "https://www.googleapis.com/auth/drive",
     ]
 
-    creds = Credentials.from_service_account_file(
-        "service_account.json",
-        scopes=scope,
-    )
+    if "gcp_service_account" in st.secrets:
+        creds_dict = dict(st.secrets["gcp_service_account"])
+        if "private_key" in creds_dict:
+            creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+        creds = Credentials.from_service_account_info(
+            creds_dict,
+            scopes=scope,
+        )
+    elif os.path.exists("service_account.json"):
+        creds = Credentials.from_service_account_file(
+            "service_account.json",
+            scopes=scope,
+        )
+    else:
+        st.error("Google Service Account credentials missing. Configure [gcp_service_account] in Streamlit Secrets.")
+        st.stop()
 
     return gspread.authorize(creds)
 
