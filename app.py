@@ -51,29 +51,38 @@ if not st.session_state.logged_in:
     st.stop()
 
 # ==================================
-# FIXED TOP & BOTTOM BAR CSS (DESKTOP + MOBILE)
+# FIXED TOP & BOTTOM BAR CSS (EQUAL ALIGNMENT + CENTERED NAV)
 # ==================================
 
 st.markdown("""<style>
 header[data-testid="stHeader"] {
     display: none !important;
 }
-.block-container,
-[data-testid="stMainBlockContainer"] {
-    padding-top: 98px !important;
-    padding-bottom: 96px !important;
+
+/* Hide Streamlit Cloud floating viewer badge so Users tab is never covered */
+[data-testid="stDecoration"],
+[data-testid="stStatusWidget"],
+.viewerBadge_container__r5tak,
+.styles_viewerBadge__CvC9N {
+    display: none !important;
 }
 
-/* 1. FIXED TOP HEADER BAR (ALWAYS SINGLE ROW) */
+.block-container,
+[data-testid="stMainBlockContainer"] {
+    padding-top: 94px !important;
+    padding-bottom: 94px !important;
+}
+
+/* 1. FIXED TOP HEADER BAR (EQUAL VERTICAL CENTER ALIGNMENT) */
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     width: 100vw !important;
-    height: 76px !important;
-    min-height: 76px !important;
-    max-height: 76px !important;
+    height: 74px !important;
+    min-height: 74px !important;
+    max-height: 74px !important;
     background: linear-gradient(90deg, #061b4e 0%, #082567 100%) !important;
     color: white !important;
     display: flex !important;
@@ -81,18 +90,30 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) {
     flex-wrap: nowrap !important;
     justify-content: space-between !important;
     align-items: center !important;
-    padding: 8px 20px !important;
+    padding: 0 20px !important;
     margin: 0 !important;
-    gap: 8px !important;
+    gap: 10px !important;
     z-index: 99999 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22) !important;
 }
 
-/* Prevent Streamlit column wrappers from stacking vertically on mobile */
+/* Force every inner column & wrapper inside top bar to center vertically */
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stColumn"],
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) [data-testid="stVerticalBlock"],
+div[data-testid="stHorizontalBlock"]:has(.top-title-box) [data-testid="stElementContainer"] {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: stretch !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+}
+
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stColumn"] {
     width: auto !important;
     min-width: 0 !important;
-    flex-shrink: 1 !important;
 }
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stColumn"]:first-child {
     flex: 1 1 auto !important;
@@ -111,8 +132,9 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stCo
     overflow: hidden !important;
 }
 .top-title-box h2 {
-    margin: 0 0 2px 0 !important;
-    font-size: 22px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 21px !important;
     font-weight: 700 !important;
     color: #ffffff !important;
     line-height: 1.2 !important;
@@ -122,9 +144,10 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stCo
 }
 .top-title-box span {
     display: block !important;
-    font-size: 14px !important;
+    margin: 2px 0 0 0 !important;
+    font-size: 13px !important;
     color: rgba(255, 255, 255, 0.88) !important;
-    line-height: 1.2 !important;
+    line-height: 1.15 !important;
     background: transparent !important;
     white-space: nowrap !important;
 }
@@ -133,23 +156,32 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) > div[data-testid="stCo
     display: flex !important;
     justify-content: flex-end !important;
     align-items: center !important;
+    height: 100% !important;
     background: transparent !important;
 }
 .user-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     background: rgba(255, 255, 255, 0.16) !important;
-    padding: 6px 14px !important;
-    border-radius: 18px !important;
+    height: 38px !important;
+    padding: 0 14px !important;
+    border-radius: 19px !important;
     font-size: 15px !important;
     font-weight: 600 !important;
     color: #ffffff !important;
     white-space: nowrap !important;
+    line-height: 1 !important;
 }
 
-/* Red Logout Button Inside Top Header Bar */
+/* Red Logout Button Centered Inside Top Header Bar */
 div[data-testid="stHorizontalBlock"]:has(.top-title-box) button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     background: #E53935 !important;
     color: #ffffff !important;
-    border-radius: 18px !important;
+    border-radius: 19px !important;
     height: 38px !important;
     min-height: 38px !important;
     padding: 0 14px !important;
@@ -165,7 +197,7 @@ div[data-testid="stHorizontalBlock"]:has(.top-title-box) button:hover {
     color: #ffffff !important;
 }
 
-/* 2. FIXED BOTTOM NAVIGATION BAR (ALWAYS SINGLE ROW) */
+/* 2. FIXED BOTTOM NAVIGATION BAR (CENTERED TEXT INSIDE EVERY BUTTON) */
 div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) {
     position: fixed !important;
     bottom: 0 !important;
@@ -181,6 +213,7 @@ div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
+    align-items: center !important;
     gap: 8px !important;
 }
 
@@ -191,25 +224,40 @@ div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) > div[data-test
 }
 
 div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
     width: 100% !important;
-    height: 48px !important;
-    min-height: 48px !important;
+    height: 50px !important;
+    min-height: 50px !important;
     border-radius: 12px !important;
     font-size: 16px !important;
     font-weight: 600 !important;
     background: #f1f5f9 !important;
     color: #1e293b !important;
     border: 1px solid #cbd5e1 !important;
-    padding: 0 6px !important;
+    padding: 0 4px !important;
+    margin: 0 !important;
+    overflow: hidden !important;
     transition: all 0.2s ease !important;
 }
 
+div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button div,
 div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button p {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
     font-size: 16px !important;
+    line-height: 1.15 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     margin: 0 !important;
+    padding: 0 !important;
 }
 
 div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button:hover {
@@ -228,31 +276,33 @@ div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button[kind="pr
 @media (max-width: 768px) {
     .block-container,
     [data-testid="stMainBlockContainer"] {
-        padding-top: 74px !important;
+        padding-top: 72px !important;
         padding-bottom: 84px !important;
     }
     div[data-testid="stHorizontalBlock"]:has(.top-title-box) {
-        height: 60px !important;
-        min-height: 60px !important;
-        max-height: 60px !important;
-        padding: 6px 10px !important;
+        height: 58px !important;
+        min-height: 58px !important;
+        max-height: 58px !important;
+        padding: 0 10px !important;
         gap: 6px !important;
     }
     .top-title-box h2 {
         font-size: 14px !important;
-        margin: 0 0 1px 0 !important;
+        margin: 0 !important;
     }
     .top-title-box span {
         font-size: 11px !important;
+        margin-top: 1px !important;
     }
     .user-badge {
-        padding: 4px 8px !important;
+        height: 30px !important;
+        padding: 0 9px !important;
         font-size: 12px !important;
     }
     div[data-testid="stHorizontalBlock"]:has(.top-title-box) button {
-        height: 32px !important;
-        min-height: 32px !important;
-        padding: 0 10px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+        padding: 0 9px !important;
         font-size: 12px !important;
     }
     div[data-testid="stHorizontalBlock"]:has(.top-title-box) button p {
@@ -260,18 +310,20 @@ div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button[kind="pr
     }
     div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) {
         padding: 6px 4px !important;
-        gap: 4px !important;
+        gap: 3px !important;
     }
     div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button {
-        height: 46px !important;
-        min-height: 46px !important;
-        padding: 0 2px !important;
+        height: 48px !important;
+        min-height: 48px !important;
+        padding: 2px 1px !important;
         border-radius: 10px !important;
     }
+    div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button div,
     div[data-testid="stHorizontalBlock"]:has([class*="st-key-nav_"]) button p {
-        font-size: 11px !important;
+        font-size: 10.5px !important;
         line-height: 1.15 !important;
-        white-space: normal !important;
+        letter-spacing: -0.2px !important;
+        white-space: nowrap !important;
     }
 }
 </style>""", unsafe_allow_html=True)
